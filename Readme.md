@@ -1,86 +1,150 @@
 
-# Panduan Instalasi gcommit di Windows
+# 🤖 gcommit on Ubuntu with Virtual Environment
 
-Ikuti langkah-langkah berikut untuk mengatur alat gcommit di sistem operasi Windows.
-
-## 1. Persiapan Awal
-
-Sebelum memulai, pastikan Anda memiliki **Python** dan **Git** terinstal di komputer Anda.
-
-- **Python 3.x**: Jika belum terinstal, unduh dari [python.org](https://www.python.org). Pastikan mencentang opsi "Add Python to PATH" saat instalasi.
-- **Git**: Unduh dari [git-scm.com](https://git-scm.com/download/win) dan ikuti instruksi default.
-
-Buka **Command Prompt** atau **PowerShell** untuk menjalankan semua perintah berikut. Anda dapat mencarinya di Start Menu.
+Panduan ini menjelaskan cara menginstal dan menggunakan **gcommit**, alat bantu Git commit berbasis AI, di Ubuntu Linux menggunakan **Python virtual environment (venv)** dan alias di terminal untuk kemudahan akses.
 
 ---
 
-## 2. Clone Repository gcommit
+## 📦 Prasyarat
 
-Clone repository gcommit ke komputer Anda menggunakan perintah berikut:
+Pastikan sistem Anda telah memiliki:
+
+- **Python 3.x**
+- **Git**
+
+Jika belum, instal dengan:
 
 ```bash
-git clone https://github.com/username/gcommit.git
-cd gcommit
+sudo apt update
+sudo apt install python3 python3-pip python3-venv git
 ```
 
-> **Catatan**: Ganti `username` dengan nama pengguna GitHub yang sesuai jika URL berbeda.
+---
 
+## 🧪 1. Siapkan Virtual Environment (venv)
 
-lalu jalankan 
-```pip install GitPython google-generativeai```
+> Jika Anda **belum memiliki virtual environment**, ikuti langkah ini.  
+> Jika sudah punya, **lewati ke langkah 2** dan sesuaikan dengan lokasi `venv` Anda.
+
+```bash
+# Buat folder khusus untuk menyimpan semua virtual environment (opsional)
+mkdir -p ~/venvs
+
+# Buat virtual environment baru bernama 'myenv'
+python3 -m venv ~/venvs/myenv
+```
 
 ---
 
-## 3. Dapatkan dan Atur Google Gemini API Key
+## 🗂️ 2. Clone Folder Proyek dan Simpan gcommit
 
-gcommit membutuhkan API Key dari Google Gemini untuk berkomunikasi dengan model AI.
+```bash
+# Clone repository di directory yang anda mau
+cd ~/project/gcommit-ubuntu
+```
 
-### Dapatkan API Key
-1. Buka [Google AI Studio](https://ai.google.com/studio) di browser Anda.
+---
+
+## 📥 3. Aktifkan venv dan Instal Dependensi
+
+```bash
+source ~/venvs/myenv/bin/activate
+pip install GitPython google-generativeai
+```
+
+---
+
+## 🔐 4. Tambahkan Google Gemini API Key
+
+Untuk memungkinkan gcommit menggunakan AI Gemini, Anda harus memiliki API Key.
+
+### Cara mendapatkan API Key:
+1. Kunjungi [Google AI Studio](https://ai.google.com/studio)
 2. Login dengan akun Google Anda.
-3. Klik **"Get API key"** di bagian kiri.
-4. Klik **"Create API key in new project"** dan salin key yang muncul (diawali dengan `AIza...`).
+3. Klik **"Get API key"** → **"Create API key in new project"**
+4. Salin API Key yang diberikan (misalnya diawali dengan `AIza...`)
 
-### Atur API Key sebagai Variabel Lingkungan
-1. Cari **"Edit the system environment variables"** di Start Menu Windows dan klik.
-2. Pada jendela **System Properties**, klik tombol **Environment Variables...**.
-3. Di bagian **User variables**, klik **New...**.
-  - **Variable name**: `GOOGLE_API_KEY`
-  - **Variable value**: Tempel API Key yang sudah disalin.
-4. Klik **OK** pada semua jendela.
+### Tambahkan API Key ke file aktivasi venv:
 
-> **Penting**: Tutup dan buka kembali Command Prompt/PowerShell agar perubahan variabel lingkungan berlaku.
+```bash
+nano ~/venvs/myenv/bin/activate
+```
 
----
+Tambahkan baris berikut di akhir file:
 
-## 4. Tambahkan Folder ke PATH Sistem
+```bash
+export GOOGLE_API_KEY="ISI_DENGAN_API_KEY_ANDA"
+```
 
-Langkah ini memungkinkan Anda menjalankan `gcommit` dari mana saja.
-
-1. Cari **"Edit the system environment variables"** di Start Menu.
-2. Klik tombol **Environment Variables...**.
-3. Di bagian **User variables**, pilih variabel `Path` dan klik **Edit...**.
-4. Klik **New** dan tambahkan path lengkap ke folder `gcommit` Anda (misalnya, `D:\gcommit\`).
-5. Klik **OK** pada semua jendela.
-
-> **Penting**: Tutup dan buka kembali Command Prompt/PowerShell agar perubahan PATH berlaku.
+Simpan dan keluar (`Ctrl+X`, lalu `Y`, lalu `Enter`)
 
 ---
 
-## Cara Menggunakan gcommit
+## ⚙️ 5. Buat Alias `gcommit` di `.bashrc`
 
-1. Buka Command Prompt atau PowerShell.
-2. Pindah ke direktori proyek Git Anda:
-  ```bash
-  cd C:\Users\NamaAnda\Documents\MyAwesomeProject
-  ```
-3. Lakukan staging perubahan:
-  ```bash
-  git add .
-  ```
-4. Jalankan alat gcommit:
-  ```bash
-  gcommit
-  ```
+Agar Anda bisa menjalankan `gcommit` dari terminal di mana saja, tambahkan alias ke `.bashrc`.
 
-gcommit akan menampilkan pesan commit yang disarankan oleh AI. Ketik `y` untuk melakukan commit atau `n` untuk membatalkannya.
+```bash
+nano ~/.bashrc
+```
+
+Tambahkan baris ini di akhir file:
+
+```bash
+alias gcommit='source ~/venvs/myenv/bin/activate && python3 ~/project/gcommit-ubuntu/gcommit.py'
+```
+
+> **Catatan**: Sesuaikan path jika Anda menggunakan lokasi `venv` atau proyek yang berbeda.
+
+Kemudian aktifkan perubahan:
+
+```bash
+source ~/.bashrc
+```
+
+---
+
+## 🚀 Cara Menggunakan gcommit
+
+1. Buka terminal dan pindah ke folder proyek Git Anda:
+   ```bash
+   cd ~/Documents/nama-proyek-anda
+   ```
+
+2. Stage perubahan:
+   ```bash
+   git add .
+   ```
+
+3. Jalankan gcommit:
+   ```bash
+   gcommit
+   ```
+
+4. Ikuti instruksi di terminal:
+   - Tekan `y` untuk menggunakan pesan commit yang disarankan
+   - Tekan `n` untuk membatalkan
+
+---
+
+## 🧠 Tips
+
+- Jika Anda ingin menggunakan `.env` untuk menyimpan API key daripada menulisnya di `activate`, Anda bisa memodifikasi `gcommit.py` untuk membaca dari `.env` menggunakan `python-dotenv`.
+- Untuk multiple environment, buat alias lain seperti `gcommit-dev`, `gcommit-prod`, dsb.
+
+---
+
+## ✅ Struktur Folder yang Disarankan
+
+```
+.
+├── project/
+│   └── gcommit-ubuntu/
+│       └── gcommit.py
+└── venvs/
+    └── myenv/
+```
+
+---
+
+Happy committing! 🚀
